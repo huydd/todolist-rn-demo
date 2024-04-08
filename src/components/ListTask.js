@@ -1,13 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 const ListTask = (props) => {
+  const [showDeleteAll, setShowDeleteAll] = useState(false);
+  const [showNumberTask, setShowNumberTask] = useState(false);
+
   const handleDeleteTask = (indexDelete) => () => {
     props.deleteTaskComplete(indexDelete);
   };
 
+  useEffect(() => {
+    console.log("effect of list task");
+    if (props.listTaskData.length >= 2) {
+      setShowDeleteAll(true);
+    } else {
+      setShowDeleteAll(false);
+    }
+  });
+
+  useEffect(() => {
+    setShowNumberTask(showDeleteAll);
+  }, [showDeleteAll]);
+
+  useEffect(() => {
+    console.log("use Effect 1");
+    return () => {
+      console.log("same unmounting");
+    };
+  }, []);
+
   return (
     <View style={{ padding: 10 }}>
+      <View
+        style={{
+          marginBottom: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 10,
+        }}
+      >
+        {showNumberTask && (
+          <Text style={{}}>Bạn có {props.listTaskData.length} task</Text>
+        )}
+        {showDeleteAll && (
+          <TouchableOpacity
+            style={{
+              width: 80,
+              height: 30,
+              borderRadius: 8,
+              backgroundColor: "red",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white" }}>Delete All</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       {props.listTaskData.map((item, index) => {
         return (
           <View
